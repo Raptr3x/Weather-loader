@@ -6,7 +6,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-cpr::Response call_api(string city, string unitSys) {
+cpr::Response call_api(string& city, string& unitSys) {
     const string api_key = "1b163db11fa9b3b855ad058329c6466b";
     string api_url = "api.openweathermap.org/data/2.5/weather";
 
@@ -21,7 +21,7 @@ cpr::Response call_api(string city, string unitSys) {
     return r;
 }
 
-void write_json(string filename, json data) {
+void write_json(string& filename, json& data) {
     ofstream file;
     file.open(filename);
 
@@ -32,9 +32,7 @@ void write_json(string filename, json data) {
     cout << "Data is saved under " << filename << endl;
 }
 
-string get_user_input() {
-    string city;
-    string unitSys;
+void get_user_input(string& city, string& unitSys) {
 
     cout << "Open Weather Map API\n" << "---------------------\n" << endl;
 
@@ -49,16 +47,14 @@ string get_user_input() {
             [](unsigned char c) { return tolower(c); });
 
     } while (unitSys != "metric" && unitSys != "imperial");
-
-    return city, unitSys;
 }
 
 
 int main()
 {
-    string city, unitSys;
+    string city, unitSys, filename = "data.json";
 
-    city, unitSys = get_user_input();
+    get_user_input(city, unitSys);
 
     cpr::Response r = call_api(city, unitSys);
 
@@ -68,8 +64,9 @@ int main()
     }
 
     json json_response = json::parse(r.text);
-    cout << json_response << endl;
-    write_json("data.json", json_response);
+
+    cout << "\n" << json_response << "\n" << endl;
+    write_json(filename, json_response);
 
     return 0;
 }
