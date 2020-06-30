@@ -32,8 +32,7 @@ void write_json(string filename, json data) {
     cout << "Data is saved under " << filename << endl;
 }
 
-int main()
-{
+string get_user_input() {
     string city;
     string unitSys;
 
@@ -42,8 +41,24 @@ int main()
     cout << "City name: ";
     cin >> city;
 
-    cout << "\n[M]etric system or [I]mperial system: ";
-    cin >> unitSys;
+    do {
+        cout << "\n[Metric] or [Imperial] system?: ";
+        cin >> unitSys;
+
+        transform(unitSys.begin(), unitSys.end(), unitSys.begin(),
+            [](unsigned char c) { return tolower(c); });
+
+    } while (unitSys != "metric" && unitSys != "imperial");
+
+    return city, unitSys;
+}
+
+
+int main()
+{
+    string city, unitSys;
+
+    city, unitSys = get_user_input();
 
     cpr::Response r = call_api(city, unitSys);
 
