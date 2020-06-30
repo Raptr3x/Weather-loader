@@ -36,3 +36,4 @@
 *.log
 /Debug
 /x64/Debug
+*.json
